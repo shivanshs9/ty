@@ -136,12 +136,22 @@ func Check(f interface{}, as ...interface{}) *Typed {
 		rf = reflect.Indirect(rf)
 		tf = rf.Type()
 	}
+	isVariadic := tf.IsVariadic()
 	if tf.Kind() != reflect.Func {
 		ppe("The type of `f` must be a function, but it is a '%s'.", tf.Kind())
 	}
-	if tf.NumIn() != len(as) {
+	if !isVariadic && tf.NumIn() != len(as) {
 		ppe("`f` expects %d arguments, but only %d were given.",
 			tf.NumIn(), len(as))
+	}
+	lenParams := tf.NumIn()
+	params := make([]reflect.Type, len(as))
+	for i := 0; i < len(as); i++ {
+		if isVariadic && i >= lenParams-1 {
+			params[i] = tf.In(lenParams - 1).Elem()
+		} else {
+			params[i] = tf.In(i)
+		}
 	}
 
 	// Populate the argument value list.
@@ -153,7 +163,7 @@ func Check(f interface{}, as ...interface{}) *Typed {
 	// Populate our type variable environment through unification.
 	tyenv := make(tyenv)
 	for i := 0; i < len(args); i++ {
-		tp := typePair{tyenv, tf.In(i), args[i].Type()}
+		tp := typePair{tyenv, params[i], args[i].Type()}
 
 		// Mutates the type variable environment.
 		if err := tp.unify(tp.param, tp.input); err != nil {

@@ -23,3 +23,9 @@ func TestValues(t *testing.T) {
 	scmp := func(a, b string) bool { return a < b }
 	assertDeep(t, []string{"a", "b", "c"}, QuickSort(scmp, vals))
 }
+
+func TestMergeStringMaps(t *testing.T) {
+	m1 := map[string]string{"x": "2"}
+	m2 := map[string]string{"y": "whatever"}
+	assertDeep(t, map[string]string{"x": "2", "y": "whatever"}, MergeMaps(m1, m2))
+}

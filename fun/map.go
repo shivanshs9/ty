@@ -3,7 +3,7 @@ package fun
 import (
 	"reflect"
 
-	"github.com/BurntSushi/ty"
+	"github.com/shivanshs9/ty"
 )
 
 // Keys has a parametric type:
@@ -42,5 +42,21 @@ func Values(m interface{}) interface{} {
 	return vvals.Interface()
 }
 
-// func MapMerge(m1, m2 interface{}) interface{} {
-// }
+// MergeMaps has a parametric type:
+//
+//	func MergeMaps(maps ...map[A]B) map[A]B
+//
+// MergeMaps returns the map obtained by merging m1 and m2
+func MergeMaps(maps ...interface{}) interface{} {
+	chk := ty.Check(new(func(...map[ty.A]ty.B) map[ty.A]ty.B), maps...)
+	vxs, trs := chk.Args, chk.Returns[0]
+	res := reflect.MakeMap(trs)
+	xsLen := len(vxs)
+	for i := 0; i < xsLen; i++ {
+		iter := vxs[i].MapRange()
+		for iter.Next() {
+			res.SetMapIndex(iter.Key(), iter.Value())
+		}
+	}
+	return res.Interface()
+}
