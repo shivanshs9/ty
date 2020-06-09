@@ -184,6 +184,17 @@ func Check(f interface{}, as ...interface{}) *Typed {
 	return &Typed{args, retTypes, map[string]reflect.Type(tyenv)}
 }
 
+func SafeCheck(f interface{}, as ...interface{}) (typed *Typed, err error) {
+	defer func() {
+		if ery := recover(); ery != nil {
+			typed = nil
+			err = ery.(error)
+		}
+	}()
+	typed = Check(f, as...)
+	return typed, err
+}
+
 // tyenv maps type variable names to their inferred Go type.
 type tyenv map[string]reflect.Type
 
