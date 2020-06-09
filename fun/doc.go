@@ -20,7 +20,7 @@ the type of the function: type assert the result to the desired type.
 When the caller provides values that are inconsistent with the parametric type
 of the function, the function will panic with a `TypeError`. (Either because
 the types cannot be unified or because they cannot be constructed due to
-limitations of the `reflect` package. See the `github.com/BurntSushi/ty`
+limitations of the `reflect` package. See the `github.com/shivanshs9/ty`
 package for more details.)
 
 Requirements

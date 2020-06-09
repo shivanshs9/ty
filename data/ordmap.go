@@ -3,7 +3,7 @@ package data
 import (
 	"reflect"
 
-	"github.com/BurntSushi/ty"
+	"github.com/shivanshs9/ty"
 )
 
 // OrdMap has a parametric type `OrdMap<K, V>` where `K` is the type

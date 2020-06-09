@@ -3,7 +3,7 @@ package fun
 import (
 	"reflect"
 
-	"github.com/BurntSushi/ty"
+	"github.com/shivanshs9/ty"
 )
 
 // Set has a parametric type:

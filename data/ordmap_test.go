@@ -38,7 +38,7 @@ func ExampleOrderedMap() {
 	}
 
 	omap.Delete("J. Geils Band")
-	fmt.Println("\nDeleted 'J. Geils Band'...\n")
+	fmt.Println("\nDeleted 'J. Geils Band'...")
 
 	for _, key := range omap.Keys().([]string) {
 		fmt.Printf("%s: %v\n", key, omap.Get(key))

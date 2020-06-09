@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/BurntSushi/ty"
+	"github.com/shivanshs9/ty"
 )
 
 var randNumGen *rand.Rand
@@ -82,7 +82,7 @@ func SampleGen(population interface{}, n int, rng *rand.Rand) interface{} {
 		n = popLen
 	}
 
-	// TODO(burntsushi): Implement an algorithm that doesn't depend on
+	// TODO(shivanshs9): Implement an algorithm that doesn't depend on
 	// the size of the population.
 
 	rsamp := reflect.MakeSlice(tsamp, n, n)

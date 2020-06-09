@@ -21,8 +21,8 @@ for structs and functions(?).
 ## Installation
 
 ```bash
-go get github.com/BurntSushi/ty
-go get github.com/BurntSushi/ty/fun
+go get github.com/shivanshs9/ty
+go get github.com/shivanshs9/ty/fun
 ```
 
 ## Examples
@@ -116,4 +116,3 @@ fib = Memo(fib).(func(int64) int64)
 // without memoization.
 fmt.Println(fib(80))
 ```
-

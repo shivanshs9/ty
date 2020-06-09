@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/BurntSushi/ty"
+	"github.com/shivanshs9/ty"
 )
 
 // QuickSort has a parametric type:
