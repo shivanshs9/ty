@@ -42,21 +42,41 @@ func Values(m interface{}) interface{} {
 	return vvals.Interface()
 }
 
-// MergeMaps has a parametric type:
+// MergeMaps either has a parametric type:
 //
 //	func MergeMaps(maps ...map[A]B) map[A]B
+//	OR
+//	func MergeMaps(maps []map[A]B) map[A]B
 //
-// MergeMaps returns the map obtained by merging m1 and m2
+// MergeMaps returns the map obtained by merging all the maps
 func MergeMaps(maps ...interface{}) interface{} {
-	chk := ty.Check(new(func(...map[ty.A]ty.B) map[ty.A]ty.B), maps...)
-	vxs, trs := chk.Args, chk.Returns[0]
-	res := reflect.MakeMap(trs)
-	xsLen := len(vxs)
-	for i := 0; i < xsLen; i++ {
-		iter := vxs[i].MapRange()
-		for iter.Next() {
-			res.SetMapIndex(iter.Key(), iter.Value())
+	if len(maps) > 1 {
+		// handle vararg case
+		chk := ty.Check(new(func(...map[ty.A]ty.B) map[ty.A]ty.B), maps...)
+		vxs, trs := chk.Args, chk.Returns[0]
+		res := reflect.MakeMap(trs)
+		xsLen := len(vxs)
+		for i := 0; i < xsLen; i++ {
+			iter := vxs[i].MapRange()
+			for iter.Next() {
+				res.SetMapIndex(iter.Key(), iter.Value())
+			}
 		}
+		return res.Interface()
+	} else if len(maps) == 1 {
+		// handle slice of maps case
+		chk := ty.Check(new(func([]map[ty.A]ty.B) map[ty.A]ty.B), maps[0])
+		vxs, trs := chk.Args[0], chk.Returns[0]
+		res := reflect.MakeMap(trs)
+		xsLen := vxs.Len()
+		for i := 0; i < xsLen; i++ {
+			iter := vxs.Index(i).MapRange()
+			for iter.Next() {
+				res.SetMapIndex(iter.Key(), iter.Value())
+			}
+		}
+		return res.Interface()
+	} else {
+		panic("Atleast provide one map to merge")
 	}
-	return res.Interface()
 }

@@ -24,8 +24,14 @@ func TestValues(t *testing.T) {
 	assertDeep(t, []string{"a", "b", "c"}, QuickSort(scmp, vals))
 }
 
-func TestMergeStringMaps(t *testing.T) {
+func TestMergeVarargMaps(t *testing.T) {
 	m1 := map[string]string{"x": "2"}
 	m2 := map[string]string{"y": "whatever"}
 	assertDeep(t, map[string]string{"x": "2", "y": "whatever"}, MergeMaps(m1, m2))
+}
+
+func TestMergeListMaps(t *testing.T) {
+	m1 := map[string]string{"x": "2"}
+	m2 := map[string]string{"y": "whatever"}
+	assertDeep(t, map[string]string{"x": "2", "y": "whatever"}, MergeMaps([]map[string]string{m1, m2}))
 }
