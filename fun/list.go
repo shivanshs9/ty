@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/BurntSushi/ty"
+	"github.com/shivanshs9/ty"
 )
 
 // All has a parametric type:
@@ -90,6 +90,32 @@ func Map(f, xs interface{}) interface{} {
 		vys.Index(i).Set(vy)
 	}
 	return vys.Interface()
+}
+
+// MapWithError has a parametric type:
+//
+//	func MapWithError(f func(A) (B, error), xs []A) ([]B, error)
+//
+// MapWithError returns the list corresponding to the return value of applying
+// `f` to each element in `xs`.
+func MapWithError(f, xs interface{}) (result interface{}, err error) {
+	chk := ty.Check(
+		new(func(func(ty.A) (ty.B, error), []ty.A) []ty.B),
+		f, xs)
+	vf, vxs, tys := chk.Args[0], chk.Args[1], chk.Returns[0]
+
+	xsLen := vxs.Len()
+	vys := reflect.MakeSlice(tys, xsLen, xsLen)
+	for i := 0; i < xsLen; i++ {
+		vy, ey := call2(vf, vxs.Index(i))
+		ery := ey.Interface()
+		if ery != nil {
+			err = ery.(error)
+			break
+		}
+		vys.Index(i).Set(vy)
+	}
+	return vys.Interface(), err
 }
 
 // Filter has a parametric type:

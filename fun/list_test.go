@@ -1,6 +1,8 @@
 package fun
 
 import (
+	"errors"
+	"strconv"
 	"testing"
 )
 
@@ -14,6 +16,22 @@ func TestMap(t *testing.T) {
 	strlen := func(s string) int { return len(s) }
 	lens := Map(strlen, []string{"abc", "ab", "a"}).([]int)
 	assertDeep(t, lens, []int{3, 2, 1})
+}
+
+func TestMapWithError(t *testing.T) {
+	input := []int{1, 31, 0}
+	t.Logf("Input: %v", input)
+	transformer := func(val int) (string, error) {
+		if val == 0 {
+			return "", errors.New("Input value is 0")
+		}
+		return strconv.FormatInt(int64(val), 2), nil
+	}
+	output, err := MapWithError(transformer, input)
+	if err == nil {
+		t.Errorf("Error is not nil - Output: %v, Error: %v", output, err)
+	}
+	t.Logf("Output: %v, Error: %v", output, err)
 }
 
 func TestFilter(t *testing.T) {
